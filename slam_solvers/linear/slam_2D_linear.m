@@ -44,6 +44,7 @@ if strcmp(method, 'all')
     tic;
     x_pinv = solve_pinv(A, b);
     t_pinv = toc;
+    
     [traj_pinv, landmarks_pinv] = format_solution(x_pinv, n_poses, n_landmarks, o_dim, m_dim);
     
     tic;

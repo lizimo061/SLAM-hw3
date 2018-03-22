@@ -60,12 +60,6 @@ for i = 1:n_poses
     if i~=1
         A(2*i-1:2*i,2*i-3:2*i-2) = -sigma_o_sq*H_o;
     end
-    
-    if i == 1
-        b(i:i+1) = [0;0];
-    else
-        b(2*i-1:2*i) = [odom(i-1,1);odom(i-1,2)];
-    end
 end
 
 base = p_dim*n_poses;
@@ -74,10 +68,8 @@ for i = 1:n_obs
     p_idx = obs(i,1);
     l_idx = obs(i,2);
     A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H_m;
-    A(base +2*i-1:base+2*i, 2*l_idx-1:2*l_idx) = -sigma_l_sq*H_m;
-    b(base +2*i-1:base+2*i) = [obs(i,3); obs(i,4)];
+    A(base +2*i-1:base+2*i, 2*l_idx-1:2*l_idx)
 end
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% Your code goes here %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
