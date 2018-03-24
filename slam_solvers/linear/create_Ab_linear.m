@@ -52,6 +52,7 @@ b = zeros(M, 1);
 % pose
 sigma_o_sq = inv(sqrt(sigma_o));
 sigma_l_sq = inv(sqrt(sigma_l));
+
 H_o = eye(2);
 H_m = -eye(2);
 
@@ -64,7 +65,7 @@ for i = 1:n_poses
     if i == 1
         b(i:i+1) = [0;0];
     else
-        b(2*i-1:2*i) = [odom(i-1,1);odom(i-1,2)];
+        b(2*i-1:2*i) = sigma_o_sq*[odom(i-1,1);odom(i-1,2)];
     end
 end
 
@@ -73,9 +74,10 @@ base = p_dim*n_poses;
 for i = 1:n_obs
     p_idx = obs(i,1);
     l_idx = obs(i,2);
-    A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H_m;
-    A(base +2*i-1:base+2*i, 2*l_idx-1:2*l_idx) = -sigma_l_sq*H_m;
-    b(base +2*i-1:base+2*i) = [obs(i,3); obs(i,4)];
+    %A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H_m;
+    A(base +2*i-1:base+2*i, 2*p_idx+1:2*p_idx+2) = sigma_l_sq*H_m;
+    A(base +2*i-1:base+2*i, base+2*l_idx-1:base+2*l_idx) = -sigma_l_sq*H_m;
+    b(base +2*i-1:base+2*i) = sigma_l_sq*[obs(i,3); obs(i,4)];
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

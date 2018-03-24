@@ -23,8 +23,8 @@ if nargin < 1
 end
 
 %% Useful constants
-n_poses = size(gt_traj, 1);
-n_landmarks = size(gt_landmarks, 1);
+n_poses = size(gt_traj, 1)
+n_landmarks = size(gt_landmarks, 1)
 n_odom = size(odom, 1);
 n_obs  = size(observations, 1);
 
@@ -39,6 +39,10 @@ M = o_dim*(n_odom+1) + m_dim*n_obs;     % +1 for prior on the first pose
 
 %% Create sparse A matrix and b vector 
 [A, b] = create_Ab_linear(odom, observations, sigma_odom, sigma_landmark);
+size(A)
+spy(A)
+
+
 
 if strcmp(method, 'all')
     tic;
