@@ -75,7 +75,7 @@ for i = 1:n_obs
     p_idx = obs(i,1);
     l_idx = obs(i,2);
     %A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H_m;
-    A(base +2*i-1:base+2*i, 2*p_idx+1:2*p_idx+2) = sigma_l_sq*H_m;
+    A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H_m;
     A(base +2*i-1:base+2*i, base+2*l_idx-1:base+2*l_idx) = -sigma_l_sq*H_m;
     b(base +2*i-1:base+2*i) = sigma_l_sq*[obs(i,3); obs(i,4)];
 end

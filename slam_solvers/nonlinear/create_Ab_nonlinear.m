@@ -50,6 +50,50 @@ b = zeros(M, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%% Your code goes here %%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+sigma_o_sq = inv(sqrt(sigma_o));
+sigma_l_sq = inv(sqrt(sigma_l));
+
+H_o = eye(2);
+
+for i = 1:n_poses
+    A(2*i-1:2*i,2*i-1:2*i) = sigma_o_sq*H_o;
+    if i~=1
+        A(2*i-1:2*i,2*i-3:2*i-2) = -sigma_o_sq*H_o;
+    end
+    
+    if i == 1
+        b(i:i+1) = [0;0];
+    else
+        rx1 = x(2*i-3);
+        ry1 = x(2*i-2);
+        rx2 = x(2*i-1);
+        ry2 = x(2*i);
+        b(2*i-1:2*i) = sigma_o_sq*([odom(i-1,1);odom(i-1,2)] - meas_odom(rx1, ry1, rx2, ry2));
+    end
+end
+
+base = p_dim*n_poses;
+
+for i = 1:n_obs
+    p_idx = obs(i,1);
+    l_idx = obs(i,2);
+
+    rx = x(2*p_idx-1);
+    ry = x(2*p_idx);
+    lx = x(base+2*l_idx-1);
+    ly = x(base+2*l_idx);
+    H = meas_landmark_jacobian(rx, ry, lx, ly);
+    
+    A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H(:,1:2);
+    A(base +2*i-1:base+2*i, base+2*l_idx-1:base+2*l_idx) = -sigma_l_sq*H(:,3:4);
+    
+    delta = [obs(i,3); obs(i,4)] - meas_landmark(rx, ry, lx, ly);
+    if delta(1) > pi || delta(1) < -pi
+        delta(1) = wrapToPi(delta(1));
+    end
+    b(base +2*i-1:base+2*i) = sigma_l_sq*(delta);
+    
+end
 
 %% Make A a sparse matrix 
 As = sparse(A);
