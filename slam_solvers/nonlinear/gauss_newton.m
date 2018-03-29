@@ -40,7 +40,7 @@ while (true)
     err_old = error_nonlinear(x, odom, obs, sigma_o, sigma_l);
     err_new = error_nonlinear(x_new, odom, obs, sigma_o, sigma_l);
     err_delta = err_new - err_old;
-%     fprintf('Norm update: %f\tDelta error: %f\tNew error: %f\tOld error: %f\n', norm(delta), err_delta, err_new, err_old);
+    fprintf('Norm update: %f\tDelta error: %f\tNew error: %f\tOld error: %f\n', norm(delta), err_delta, err_new, err_old);
 
     %% Update x if it's a good step, otherwise break
     if (err_delta < 0)

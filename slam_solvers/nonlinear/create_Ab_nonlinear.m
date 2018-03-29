@@ -85,7 +85,7 @@ for i = 1:n_obs
     H = meas_landmark_jacobian(rx, ry, lx, ly);
     
     A(base +2*i-1:base+2*i, 2*p_idx-1:2*p_idx) = sigma_l_sq*H(:,1:2);
-    A(base +2*i-1:base+2*i, base+2*l_idx-1:base+2*l_idx) = -sigma_l_sq*H(:,3:4);
+    A(base +2*i-1:base+2*i, base+2*l_idx-1:base+2*l_idx) = sigma_l_sq*H(:,3:4);
     
     delta = [obs(i,3); obs(i,4)] - meas_landmark(rx, ry, lx, ly);
     if delta(1) > pi || delta(1) < -pi
